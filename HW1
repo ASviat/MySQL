@@ -17,3 +17,7 @@ VALUES
 ('P20 Pro','Huawei', 341, 36000);
 
 SELECT * FROM itresume7794936.mobile_phones;
+
+SELECT id, product_name, manufacturer, product_count, price
+FROM mobile_phones
+WHERE manufacturer = 'Samsung';
