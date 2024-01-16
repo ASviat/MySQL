@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS itresume7794936.mobile_phones;
+
+create table itresume7794936.mobile_phones(
+id SERIAL PRIMARY KEY, 
+product_name VARCHAR(45) not null,
+manufacturer varchar(45) not null,
+product_count int,
+price int
+);
+
+INSERT INTO itresume7794936.mobile_phones (product_name, manufacturer, product_count, price)
+VALUES
+('Iphone X','Apple', 156, 76000),
+('Iphone 8', 'Apple', 180, 51000),
+('Galaxy S9','Samsung', 21, 56000),
+('Galaxy S8','Samsung', 124, 41000),
+('P20 Pro','Huawei', 341, 36000);
+
+Select * FROM itresume7794936.mobile_phones;
