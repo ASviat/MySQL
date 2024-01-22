@@ -1,0 +1,33 @@
+-- 1
+
+drop database if exists hw2;
+create database hw2;
+use hw2;
+
+create table mobile_phones(
+id INT PRIMARY KEY AUTO_INCREMENT,
+product_name VARCHAR(30) NOT null unique,
+manufacturer VARCHAR(30) NOT null,
+product_count int default 0,
+price int
+);
+
+insert into mobile_phones (product_name, manufacturer, product_count, price)
+values
+('iPhone X', 'Apple', 156, 76000),
+('iPhone 8', 'Apple', 180, 51000),
+('Galaxy S9', 'Samsung', 21, 56000),
+('Galaxy S8', 'Samsung', 124, 41000),
+('P20 Pro', 'Huawei', 341, 36000);
+
+
+create table manufacturer(
+id INT PRIMARY KEY AUTO_INCREMENT,
+name varchar(30) not null
+);
+
+insert into manufacturer(name)
+select manufacturer
+from mobile_phones
+
+-- 2
