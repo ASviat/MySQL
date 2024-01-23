@@ -43,3 +43,18 @@ CASE
 		#ELSE 'Много товара'
 END AS state
 FROM mobile_phones;
+
+-- 3
+
+ALTER TABLE itresume7794936.mobile_phones 
+ADD COLUMN manufacturer_id INT,
+ADD CONSTRAINT fk_manufacturer
+FOREIGN KEY (manufacturer_id) 
+REFERENCES itresume7794936.manufacturer(id)
+ON UPDATE CASCADE
+ON DELETE SET NULL;
+
+DELETE FROM itresume7794936.manufacturer
+WHERE id = 3;
+
+SELECT * FROM itresume7794936.mobile_phones;
