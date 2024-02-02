@@ -1,0 +1,80 @@
+drop database if exists hw5;
+create database hw5;
+use hw5;
+
+drop table if exists users;
+create table users
+(
+	id int auto_increment primary key,
+	firstname varchar(40),
+	lastname varchar(40),
+	email varchar(40) unique
+
+);
+
+insert into users (firstname, lastname,email)
+values
+('Reuben', 'Nienow', 'arlo50@example.org'),
+('Frederik', 'Upton', 'terrence.cartwright@example.org'),
+('Unique', 'Windler', 'rupert55@example.org'),
+('Norene', 'West', 'rebekah29@example.net'),
+('Frederick', 'Effertz', 'von.bridget@example.net'),
+('Victoria', 'Medhurst', 'sstehr@example.net'),
+('Austyn',	'Braun',	'itzel.beahan@example.com'),
+('Jaida',	'Kilback',	'johnathan.wisozk@example.com'),
+('Mireya',	'Orn',	'missouri87@example.org'),
+('Jordyn',	'Jerde',	'edach@example.com');
+
+drop table if exists messages;
+create table messages
+(
+id int primary key auto_increment,
+from_user_id int,
+to_user_id int not null,
+body varchar(200)
+);
+
+insert into messages (from_user_id, to_user_id, body)
+values
+(1,2,'lkmkfmskl'),
+(2,1,'kfjskf'),
+(3,1, 'kfkfkdfkdkfkdk'),
+(4,	1,	'Quod dicta omnis placeat id et officiis et. Beatae enim aut aliquid neque occaecati odit. Facere eum distinctio assumenda omnis est delectus magnam.'),
+(1,	5,	'Voluptas omnis enim quia porro debitis facilis eaque ut. Id inventore non corrupti doloremque consequuntur. Molestiae molestiae deleniti exercitationem sunt qui ea accusamus deserunt.'),
+(1,	6,	'Rerum labore culpa et laboriosam eum totam. Quidem pariatur sit alias. Atque doloribus ratione eum rem dolor vitae saepe.'),
+(1,7,	'Perspiciatis temporibus doloribus debitis. Et inventore labore eos modi. Quo temporibus corporis minus. Accusamus aspernatur nihil nobis placeat molestiae et commodi eaque.'),	
+(8,	1,	'Suscipit dolore voluptas et sit vero et sint. Rem ut ratione voluptatum assumenda nesciunt ea. Quas qui qui atque ut. Similique et praesentium non voluptate iure. Eum aperiam officia quia dolorem.'),	
+(9,	3,	'Et quia libero aut vitae minus. Rerum a blanditiis de'),
+(10, 2,	'Praesentium molestias quia aut odio. Est quis eius ut animi optio molestiae. Amet tempore sequi blanditiis in'),
+(8,	3,	'Molestiae laudantium quibusdam porro est alias placeat assumenda. Ut consequatur rerum officiis exercitationem eveniet. Qui eum maxime sed i'),
+(8,	1,	'Quo asperiores et id veritatis placeat. Aperiam ut sit exercitationem iste vel nisi fugit quia. Suscipit labore error ducimus quaerat distinctio quae quas'),
+(8,	1,	'Earum sunt quia sed harum modi accusamus. Quia dolor laboriosam asperiores aliquam quia. Sint id quasi et cumque qui minima ut quo. Autem sed laudantium officiis sit'),
+(4,	1,	'Aut enim sint voluptas saepe. Ut tenetur quos rem earum sint inventore fugiat. Eaque recusandae similique earum laboru'),
+(4,	1,	'Nisi rerum officiis officiis aut ad voluptates autem. Dolor nesciunt eum qui eos dignissimos culpa iste. Atque qui vitae quos odit inventore eum. Quam et voluptas quia amet.'	),
+(4,	1,	'Consequatur ut et repellat non voluptatem nihil veritatis. Vel deleniti omnis et consequuntur. Et doloribus reprehenderit sed earum quas velit labore.'),
+(2,	1,	'Iste deserunt in et et. Corrupti rerum a veritatis harum. Ratione consequatur est ut deserunt dolores'),
+(8,	1,	'Dicta non inventore autem incidunt accusamus amet distinctio. Aut laborum nam ab maxime. Maxime minima blanditiis et neque. Et laboriosam qui at deserunt magnam.'),
+(8,	1,	'Amet ad dolorum distinctio excepturi possimus quia. Adipisci veniam porro ipsum ipsum tempora est blanditiis. Magni ut quia eius qui.'),
+(8,	1,	'Porro aperiam voluptate quo eos nobis. Qui blanditiis');
+
+/*Найти количество сообщений, отправленных каждым пользователей.
+В зависимости от количества отправленных сообщений рассчитать ранг пользователей, 
+первое место присвоив пользователю(ям) с наибольшим количеством отправленных сообщений.
+
+Вывести полученный ранг, имя, фамилия пользователя и кол-во отправленных сообщений. 
+Выводимый список необходимо отсортировать в порядке возрастания ранга.*/
+
+
+SELECT
+dense_rank() OVER (ORDER BY cnt DESC) AS dense_message,
+u.firstname,
+u.lastname,
+COALESCE(cnt, 0) AS cnt
+FROM users AS u
+LEFT JOIN (
+SELECT from_user_id, COUNT(to_user_id) AS cnt
+FROM messages
+GROUP BY from_user_id
+) AS m
+ON u.id = m.from_user_id
+ORDER BY cnt DESC;
