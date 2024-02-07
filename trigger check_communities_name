@@ -1,0 +1,6 @@
+CREATE DEFINER=`root`@`localhost` TRIGGER `check_communities_name` BEFORE INSERT ON `communities` FOR EACH ROW begin 
+	if length(new.name) < 5 then 
+	signal sqlstate '45000'
+	set message_text = 'Невозможно создать группы с названием из менее чем 5 символов.';
+	end if;
+end
