@@ -1,0 +1,66 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `vk`.`proc_del_user_data`(in user_id int,
+OUT tran_result varchar(200))
+begin
+	
+	DECLARE `_rollback` BOOL DEFAULT 0;
+	DECLARE code varchar(100);
+   	DECLARE error_string varchar(100);
+   
+   DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+   begin
+    	SET `_rollback` = 1;
+	GET stacked DIAGNOSTICS CONDITION 1
+          code = RETURNED_SQLSTATE, error_string = MESSAGE_TEXT;
+    	set tran_result = concat('Error occured. Code: ', code, '. Text: ', error_string);
+    end;
+  
+	
+	start transaction;
+	
+	-- удаление сообщений пользователя
+	delete from messages
+	where user_id = from_user_id
+	or user_id = to_user_id;
+	
+	-- удаление лайков пользователя
+	delete from likes
+	where user_id = likes.user_id;
+
+	-- удаление лайков с медиа-файлов пользователя
+	delete from likes
+	where likes.media_id in 
+	(select id from media where media.user_id = user_id);
+
+	-- удаление ссылок на аватар удаляемого пользователя
+	update profiles
+	set photo_id = null
+	where profiles.photo_id in (select id from media where media.user_id = user_id);
+
+	-- удаление профиля
+	delete from profiles
+	where user_id = profiles.user_id;
+
+	-- удаление медиа
+	delete from media
+	where media.user_id = user_id;
+	
+	-- удаление запросов в друзья
+	delete from friend_requests
+	where friend_requests.initiator_user_id = user_id
+	or friend_requests.target_user_id = user_id;
+
+	-- удаление пользователя из групп
+	delete from users_communities
+	where users_communities.user_id = user_id;
+
+	-- удаление юзера 
+	delete from users
+	where user_id = users.id;
+
+	IF `_rollback` THEN
+	       ROLLBACK;
+	    ELSE
+		set tran_result = 'ok';
+	       COMMIT;
+	    END IF;
+end
